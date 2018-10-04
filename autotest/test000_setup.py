@@ -29,6 +29,14 @@ if sysinfo.lower() == 'windows':
     eext = '.exe'
 
 
+def relpath_fallback(pth):
+    try:
+        # throws ValueError on Windows if pth is on a different drive
+        return os.path.relpath(pth)
+    except ValueError:
+        return os.path.abspath(pth)
+
+
 def create_dir(pth):
     # remove pth directory if it exists
     if os.path.exists(pth):
@@ -121,11 +129,11 @@ def test_build_modflow():
     pymake.download_and_unzip(url)
 
     # compile code
-    print('compiling...{}'.format(os.path.relpath(target)))
+    print('compiling...{}'.format(relpath_fallback(target)))
     pymake.main(srcdir, target, fct, cct, makeclean=True,
                 expedite=False, dryrun=False, double=True, debug=False)
 
-    msg = '{} does not exist.'.format(os.path.relpath(target))
+    msg = '{} does not exist.'.format(relpath_fallback(target))
     assert os.path.isfile(target), msg
 
     # change back to original path
@@ -171,11 +179,11 @@ def test_build_mfnwt():
     pymake.download_and_unzip(url)
 
     # compile code
-    print('compiling...{}'.format(os.path.relpath(target)))
+    print('compiling...{}'.format(relpath_fallback(target)))
     pymake.main(srcdir, target, fct, cct, makeclean=True,
                 expedite=False, dryrun=False, double=True, debug=False)
 
-    msg = '{} does not exist.'.format(os.path.relpath(target))
+    msg = '{} does not exist.'.format(relpath_fallback(target))
     assert os.path.isfile(target), msg
 
     # change back to original path
@@ -221,11 +229,11 @@ def test_build_usg():
     pymake.download_and_unzip(url)
 
     # compile code
-    print('compiling...{}'.format(os.path.relpath(target)))
+    print('compiling...{}'.format(relpath_fallback(target)))
     pymake.main(srcdir, target, fct, cct, makeclean=True,
                 expedite=False, dryrun=False, double=True, debug=False)
 
-    msg = '{} does not exist.'.format(os.path.relpath(target))
+    msg = '{} does not exist.'.format(relpath_fallback(target))
     assert os.path.isfile(target), msg
 
     # change back to original path
@@ -271,11 +279,11 @@ def test_build_lgr():
     pymake.download_and_unzip(url)
 
     # compile code
-    print('compiling...{}'.format(os.path.relpath(target)))
+    print('compiling...{}'.format(relpath_fallback(target)))
     pymake.main(srcdir, target, fct, cct, makeclean=True,
                 expedite=False, dryrun=False, double=True, debug=False)
 
-    msg = '{} does not exist.'.format(os.path.relpath(target))
+    msg = '{} does not exist.'.format(relpath_fallback(target))
     assert os.path.isfile(target), msg
 
     # change back to original path
@@ -304,7 +312,7 @@ def test_build_modflow6():
 
     build(srcdir, srcdir2, target, 'MODFLOW 6')
 
-    msg = '{} does not exist.'.format(os.path.relpath(target))
+    msg = '{} does not exist.'.format(relpath_fallback(target))
     assert os.path.isfile(target), msg
 
 
@@ -328,7 +336,7 @@ def test_build_mf5to6():
     build(srcdir, srcdir2, target, 'MODFLOW 5 to 6 converter',
           extrafiles=extrafiles)
 
-    msg = '{} does not exist.'.format(os.path.relpath(target))
+    msg = '{} does not exist.'.format(relpath_fallback(target))
     assert os.path.isfile(target), msg
 
 
@@ -351,7 +359,7 @@ def test_build_zonebudget():
     build(srcdir, srcdir2, target, 'ZONEBUDGET for MODFLOW 6',
           extrafiles=extrafiles)
 
-    msg = '{} does not exist.'.format(os.path.relpath(target))
+    msg = '{} does not exist.'.format(relpath_fallback(target))
     assert os.path.isfile(target), msg
 
 
