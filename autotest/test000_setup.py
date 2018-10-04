@@ -2,6 +2,7 @@ import os
 import sys
 import platform
 import shutil
+from contextlib import contextmanager
 import flopy
 import pymake
 
@@ -27,6 +28,16 @@ eext = ''
 sysinfo = platform.system()
 if sysinfo.lower() == 'windows':
     eext = '.exe'
+
+
+@contextmanager
+def cwd(path):
+    oldpwd=os.getcwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(oldpwd)
 
 
 def relpath_fallback(pth):
@@ -110,34 +121,28 @@ def test_build_modflow():
     if not rebuild:
         return
 
-    # get current directory
-    cpth = os.getcwd()
-
     # create temporary path
     dstpth = os.path.join('tempbin')
     print('create...{}'.format(dstpth))
     if not os.path.exists(dstpth):
         os.makedirs(dstpth)
-    os.chdir(dstpth)
 
-    # Set dir name
-    dirname = mf2005dir
-    srcdir = os.path.join(dirname, 'src')
+    with cwd(dstpth):
+        # Set dir name
+        dirname = mf2005dir
+        srcdir = os.path.join(dirname, 'src')
 
-    # Download the MODFLOW-2005 distribution
-    url = mf2005url
-    pymake.download_and_unzip(url)
+        # Download the MODFLOW-2005 distribution
+        url = mf2005url
+        pymake.download_and_unzip(url)
 
-    # compile code
-    print('compiling...{}'.format(relpath_fallback(target)))
-    pymake.main(srcdir, target, fct, cct, makeclean=True,
-                expedite=False, dryrun=False, double=True, debug=False)
+        # compile code
+        print('compiling...{}'.format(relpath_fallback(target)))
+        pymake.main(srcdir, target, fct, cct, makeclean=True,
+                    expedite=False, dryrun=False, double=True, debug=False)
 
-    msg = '{} does not exist.'.format(relpath_fallback(target))
-    assert os.path.isfile(target), msg
-
-    # change back to original path
-    os.chdir(cpth)
+        msg = '{} does not exist.'.format(relpath_fallback(target))
+        assert os.path.isfile(target), msg
 
     # Clean up downloaded directory
     print('delete...{}'.format(dstpth))
@@ -160,34 +165,28 @@ def test_build_mfnwt():
     if not rebuild:
         return
 
-    # get current directory
-    cpth = os.getcwd()
-
     # create temporary path
     dstpth = os.path.join('tempbin')
     print('create...{}'.format(dstpth))
     if not os.path.exists(dstpth):
         os.makedirs(dstpth)
-    os.chdir(dstpth)
 
-    # Set dir name
-    dirname = mfnwtdir
-    srcdir = os.path.join(dirname, 'src')
+    with cwd(dstpth):
+        # Set dir name
+        dirname = mfnwtdir
+        srcdir = os.path.join(dirname, 'src')
 
-    # Download the MODFLOW-NWT distribution
-    url = mfnwturl
-    pymake.download_and_unzip(url)
+        # Download the MODFLOW-NWT distribution
+        url = mfnwturl
+        pymake.download_and_unzip(url)
 
-    # compile code
-    print('compiling...{}'.format(relpath_fallback(target)))
-    pymake.main(srcdir, target, fct, cct, makeclean=True,
-                expedite=False, dryrun=False, double=True, debug=False)
+        # compile code
+        print('compiling...{}'.format(relpath_fallback(target)))
+        pymake.main(srcdir, target, fct, cct, makeclean=True,
+                    expedite=False, dryrun=False, double=True, debug=False)
 
-    msg = '{} does not exist.'.format(relpath_fallback(target))
-    assert os.path.isfile(target), msg
-
-    # change back to original path
-    os.chdir(cpth)
+        msg = '{} does not exist.'.format(relpath_fallback(target))
+        assert os.path.isfile(target), msg
 
     # Clean up downloaded directory
     print('delete...{}'.format(dstpth))
@@ -210,34 +209,28 @@ def test_build_usg():
     if not rebuild:
         return
 
-    # get current directory
-    cpth = os.getcwd()
-
     # create temporary path
     dstpth = os.path.join('tempbin')
     print('create...{}'.format(dstpth))
     if not os.path.exists(dstpth):
         os.makedirs(dstpth)
-    os.chdir(dstpth)
 
-    # Set dir name
-    dirname = mfusgdir
-    srcdir = os.path.join(dirname, 'src')
+    with cwd(dstpth):
+        # Set dir name
+        dirname = mfusgdir
+        srcdir = os.path.join(dirname, 'src')
 
-    # Download the MODFLOW-USG distribution
-    url = mfusgurl
-    pymake.download_and_unzip(url)
+        # Download the MODFLOW-USG distribution
+        url = mfusgurl
+        pymake.download_and_unzip(url)
 
-    # compile code
-    print('compiling...{}'.format(relpath_fallback(target)))
-    pymake.main(srcdir, target, fct, cct, makeclean=True,
-                expedite=False, dryrun=False, double=True, debug=False)
+        # compile code
+        print('compiling...{}'.format(relpath_fallback(target)))
+        pymake.main(srcdir, target, fct, cct, makeclean=True,
+                    expedite=False, dryrun=False, double=True, debug=False)
 
-    msg = '{} does not exist.'.format(relpath_fallback(target))
-    assert os.path.isfile(target), msg
-
-    # change back to original path
-    os.chdir(cpth)
+        msg = '{} does not exist.'.format(relpath_fallback(target))
+        assert os.path.isfile(target), msg
 
     # Clean up downloaded directory
     print('delete...{}'.format(dstpth))
@@ -260,34 +253,28 @@ def test_build_lgr():
     if not rebuild:
         return
 
-    # get current directory
-    cpth = os.getcwd()
-
     # create temporary path
     dstpth = os.path.join('tempbin')
     print('create...{}'.format(dstpth))
     if not os.path.exists(dstpth):
         os.makedirs(dstpth)
-    os.chdir(dstpth)
 
-    # Set dir name
-    dirname = mflgrdir
-    srcdir = os.path.join(dirname, 'src')
+    with cwd(dstpth):
+        # Set dir name
+        dirname = mflgrdir
+        srcdir = os.path.join(dirname, 'src')
 
-    # Download the MODFLOW-LGR distribution
-    url = mflgrurl
-    pymake.download_and_unzip(url)
+        # Download the MODFLOW-LGR distribution
+        url = mflgrurl
+        pymake.download_and_unzip(url)
 
-    # compile code
-    print('compiling...{}'.format(relpath_fallback(target)))
-    pymake.main(srcdir, target, fct, cct, makeclean=True,
-                expedite=False, dryrun=False, double=True, debug=False)
+        # compile code
+        print('compiling...{}'.format(relpath_fallback(target)))
+        pymake.main(srcdir, target, fct, cct, makeclean=True,
+                    expedite=False, dryrun=False, double=True, debug=False)
 
-    msg = '{} does not exist.'.format(relpath_fallback(target))
-    assert os.path.isfile(target), msg
-
-    # change back to original path
-    os.chdir(cpth)
+        msg = '{} does not exist.'.format(relpath_fallback(target))
+        assert os.path.isfile(target), msg
 
     # Clean up downloaded directory
     print('delete...{}'.format(dstpth))
